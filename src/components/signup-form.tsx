@@ -1,13 +1,36 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { signup } from "@/actions/user";
+import { toast } from "react-hot-toast";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  async function handleSignup() {
+    if (!name || !email) {
+      toast.error("Enter Name or email");
+    } else {
+      setLoading(true);
+      const response = await signup(name, email);
+      setLoading(false);
+      response.status
+        ? toast.success(response.message)
+        : toast.error(response.message);
+    }
+    return;
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
@@ -22,7 +45,15 @@ export function SignupForm({
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="email">Name</Label>
-                <Input id="name" type="text" placeholder="john doe" required />
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="john doe"
+                  required
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
@@ -31,10 +62,18 @@ export function SignupForm({
                   type="email"
                   placeholder="m@example.com"
                   required
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                 />
               </div>
-              <Button type="submit" className="w-full cursor-pointer">
-                Signup
+              <Button
+                type="submit"
+                className="w-full cursor-pointer"
+                disabled={loading}
+                onClick={handleSignup}
+              >
+                {loading ? "SigningUp..." : "SignUp"}
               </Button>
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-card text-muted-foreground relative z-10 px-2">
