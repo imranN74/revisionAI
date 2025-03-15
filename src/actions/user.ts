@@ -10,7 +10,7 @@ export async function signup(name: string, email: string) {
       },
     });
     return {
-      message: "signedup successfully",
+      message: "OTP sent successfully",
       data: response,
       status: true,
     };

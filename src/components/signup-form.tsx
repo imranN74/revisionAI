@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { signup } from "@/actions/user";
 import { toast } from "react-hot-toast";
+import OTPModal from "./OTPModal";
+import { useEffect } from "react";
 
 export function SignupForm({
   className,
@@ -16,20 +18,26 @@ export function SignupForm({
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
-  async function handleSignup() {
+  async function handleSignup(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
     if (!name || !email) {
       toast.error("Enter Name or email");
     } else {
       setLoading(true);
       const response = await signup(name, email);
       setLoading(false);
-      response.status
-        ? toast.success(response.message)
-        : toast.error(response.message);
+      if (response.status) {
+        toast.success(response.message);
+        setOpen(true);
+      } else {
+        toast.error(response.message);
+      }
     }
-    return;
   }
+
+  console.log(open);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -68,7 +76,7 @@ export function SignupForm({
                 />
               </div>
               <Button
-                type="submit"
+                type="button"
                 className="w-full cursor-pointer"
                 disabled={loading}
                 onClick={handleSignup}
@@ -142,6 +150,7 @@ export function SignupForm({
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
       </div>
+      <OTPModal open={open} setOpen={setOpen} />
     </div>
   );
 }
