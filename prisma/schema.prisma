@@ -21,4 +21,16 @@ model User {
   isActive   Boolean  @default(true)
   isVerified Boolean  @default(false)
   createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  Otp        Otp[]
+}
+
+model Otp {
+  id         String   @id @default(uuid())
+  userId     String
+  otp        Int
+  isActive   Boolean  @default(true)
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
 }

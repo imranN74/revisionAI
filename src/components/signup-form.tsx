@@ -9,7 +9,6 @@ import { useState } from "react";
 import { signup } from "@/actions/user";
 import { toast } from "react-hot-toast";
 import OTPModal from "./OTPModal";
-import { useEffect } from "react";
 
 export function SignupForm({
   className,
@@ -19,6 +18,7 @@ export function SignupForm({
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string>("");
 
   async function handleSignup(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
@@ -28,11 +28,12 @@ export function SignupForm({
       setLoading(true);
       const response = await signup(name, email);
       setLoading(false);
-      if (response.status) {
-        toast.success(response.message);
+      if (response.status && response.data) {
+        setUserId(response?.data?.id);
+        toast.success(response?.message || "OTP Sent Successfuly");
         setOpen(true);
       } else {
-        toast.error(response.message);
+        toast.error(response?.message || "Error while signing up");
       }
     }
   }
@@ -150,7 +151,7 @@ export function SignupForm({
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
       </div>
-      <OTPModal open={open} setOpen={setOpen} />
+      <OTPModal open={open} setOpen={setOpen} userId={userId} />
     </div>
   );
 }

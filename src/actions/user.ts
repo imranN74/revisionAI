@@ -1,5 +1,6 @@
 "use server";
 import { prisma } from "../db";
+import { sendOTp } from "./mailer";
 
 export async function signup(name: string, email: string) {
   try {
@@ -9,16 +10,17 @@ export async function signup(name: string, email: string) {
         email: email,
       },
     });
+    const mailResponse = await sendOTp(response);
     return {
-      message: "OTP sent successfully",
-      data: response,
       status: true,
+      data: response,
+      message: mailResponse?.message,
     };
   } catch (e) {
     console.log(e);
     return {
-      message: "Error while signing up",
       status: false,
+      message: "Error while signing up",
     };
   }
 }
