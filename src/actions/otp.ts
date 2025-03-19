@@ -1,26 +1,28 @@
-import { prisma } from "../db";
+import { prisma } from "../lib/db";
 
 export async function getOtp(userId: string) {
+  console.log("running");
   try {
-    console.log(userId);
+    console.log("userDataaaaa", userId);
     const response = await prisma.otp.findFirst({
-      where: { userId: userId, isActive: true },
+      where: { userId: userId, isActive: true, isVerified: false },
       orderBy: {
         createdAt: "desc",
       },
     });
+    console.log(response);
     return { status: true, data: response };
   } catch (error) {
     console.log(error);
-    return { status: false };
+    return { status: false, error: error };
   }
 }
 
-export async function handleOtp(userId: string) {
+export async function handleOtp(userId: string, otp: number) {
   try {
-    const response = await prisma.$transaction([
+    await prisma.$transaction([
       prisma.otp.updateMany({
-        where: { userId: userId },
+        where: { userId: userId, otp: otp },
         data: { isActive: false, isVerified: true },
       }),
       prisma.user.update({

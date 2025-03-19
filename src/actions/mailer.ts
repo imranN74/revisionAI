@@ -3,7 +3,7 @@
 import nodemailer from "nodemailer";
 import { generateOTP } from "otp-agent";
 import { otpMail } from "./mailContent";
-import { prisma } from "../db";
+import redis from "@/lib/redis";
 
 const senderMail = process.env.MAIL_ID;
 
@@ -28,12 +28,8 @@ export async function sendOTp(user: { email: string; id: string }) {
     });
 
     if (response.accepted.length > 0) {
-      await prisma.otp.create({
-        data: {
-          otp: Number(OTP),
-          userId: user.id,
-        },
-      });
+      const redisOtpKey = `otp:${user.id}`;
+      redis.set(redisOtpKey, OTP, "EX", 300);
       return { status: true, message: "OTP sent successfully" };
     }
   } catch (error) {

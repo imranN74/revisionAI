@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Dialog,
   DialogContent,
@@ -21,13 +22,19 @@ export default function OTPModal({
   setOpen: (open: boolean) => void;
   userId: string;
 }) {
+  console.log("Rendering OTPModal...");
   const [otp, setOtp] = useState<string>("");
 
   async function handleOtpVerification() {
-    const { data } = await getOtp(userId);
-    console.log("data", data);
-    if (data && data.otp === Number(otp)) {
-      const otpResponse = await handleOtp(data?.id);
+    console.log("handleOtpVerification triggered!");
+
+    const response = await getOtp(userId);
+    console.log("dataaaa", response);
+    if (response?.data && response?.data?.otp === Number(otp)) {
+      const otpResponse = await handleOtp(
+        response?.data?.id,
+        response?.data?.otp
+      );
       toast.success(otpResponse?.message);
     } else {
       toast.error("Invalid OTP!");

@@ -1,5 +1,5 @@
 "use server";
-import { prisma } from "../db";
+import { prisma } from "../lib/db";
 import { sendOTp } from "./mailer";
 
 export async function signup(name: string, email: string) {
@@ -16,8 +16,8 @@ export async function signup(name: string, email: string) {
       data: response,
       message: mailResponse?.message,
     };
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.log(error);
     return {
       status: false,
       message: "Error while signing up",
