@@ -4,6 +4,15 @@ import { sendOTp } from "./mailer";
 
 export async function signup(name: string, email: string) {
   try {
+    const emailExists = await prisma.user.findFirst({
+      where: { email: email, isActive: true },
+    });
+    if (emailExists) {
+      return {
+        status: false,
+        message: "Email already exists!",
+      };
+    }
     const response = await prisma.user.create({
       data: {
         name: name,

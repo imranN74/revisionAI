@@ -29,7 +29,8 @@ export async function sendOTp(user: { email: string; id: string }) {
 
     if (response.accepted.length > 0) {
       const redisOtpKey = `otp:${user.id}`;
-      redis.set(redisOtpKey, OTP, "EX", 300);
+      await redis.set(redisOtpKey, OTP, "EX", 300);
+      console.log("sentOTP", OTP);
       return { status: true, message: "OTP sent successfully" };
     }
   } catch (error) {

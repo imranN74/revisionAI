@@ -11,7 +11,8 @@ import OTPInput from "./OTPInput";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { handleOtp, getOtp } from "@/actions/otp";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function OTPModal({
   open,
@@ -22,22 +23,26 @@ export default function OTPModal({
   setOpen: (open: boolean) => void;
   userId: string;
 }) {
-  console.log("Rendering OTPModal...");
   const [otp, setOtp] = useState<string>("");
+  const [verified, setVerified] = useState(false);
+  const router = useRouter();
 
   async function handleOtpVerification() {
-    console.log("handleOtpVerification triggered!");
-
-    const response = await getOtp(userId);
-    console.log("dataaaa", response);
-    if (response?.data && response?.data?.otp === Number(otp)) {
-      const otpResponse = await handleOtp(
-        response?.data?.id,
-        response?.data?.otp
-      );
-      toast.success(otpResponse?.message);
+    const { data } = await axios.post("http://localhost:3000/api/otp", {
+      sharedOtp: otp,
+      userId: userId,
+    });
+    if (!otp) {
+      toast.error("Please enter OTP!");
     } else {
-      toast.error("Invalid OTP!");
+      if (data.status) {
+        router.push("/confirm-password");
+        toast.success(data.message);
+        setVerified(true);
+      } else {
+        toast.error(data.message);
+        setVerified(true);
+      }
     }
     setOtp("");
   }
@@ -56,8 +61,9 @@ export default function OTPModal({
               <Button
                 className="cursor-pointer"
                 onClick={handleOtpVerification}
+                disabled={verified}
               >
-                Submit
+                {verified ? "Verifying..." : "Submit"}
               </Button>
             </div>
           </DialogDescription>
