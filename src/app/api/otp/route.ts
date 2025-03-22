@@ -2,9 +2,7 @@ import redis from "@/lib/redis";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  console.log("got hit");
   const { sharedOtp, userId } = await req.json();
-  // console.log("sharedOTP =========", sharedOtp);
   const otp = await redis.get(`otp:${userId}`);
   try {
     if (sharedOtp) {

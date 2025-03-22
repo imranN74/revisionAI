@@ -36,7 +36,7 @@ export default function OTPModal({
       toast.error("Please enter OTP!");
     } else {
       if (data.status) {
-        router.push("/confirm-password");
+        router.push(`/confirm-password/${userId}`);
         toast.success(data.message);
         setVerified(true);
       } else {
