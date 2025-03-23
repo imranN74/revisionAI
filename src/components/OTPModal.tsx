@@ -12,7 +12,7 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import { verifyOtp } from "@/actions/otp";
 
 export default function OTPModal({
   open,
@@ -28,10 +28,7 @@ export default function OTPModal({
   const router = useRouter();
 
   async function handleOtpVerification() {
-    const { data } = await axios.post("http://localhost:3000/api/otp", {
-      sharedOtp: otp,
-      userId: userId,
-    });
+    const data = await verifyOtp(otp, userId);
     if (!otp) {
       toast.error("Please enter OTP!");
     } else {

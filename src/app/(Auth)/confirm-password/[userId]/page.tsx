@@ -13,13 +13,14 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
-import axios from "axios";
+import { updatePassword } from "@/actions/user";
 
 export default function ConfirmPassword() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [passwordMatched, setPasswordMatch] = useState<boolean>(true);
-  const { userId } = useParams();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { userId } = useParams() as { userId: string };
 
   async function handleCreatePwdClick() {
     try {
@@ -30,19 +31,16 @@ export default function ConfirmPassword() {
       if (password != confirmPassword) {
         setPasswordMatch(false);
       } else {
-        const { data } = await axios.post(
-          `http://localhost:3000/api/confirm-password`,
-          {
-            userId: userId,
-            password: password,
-          }
-        );
+        setLoading(true);
+        const data = await updatePassword(userId, password);
         console.log(data);
         toast.success(data?.message);
         setPasswordMatch(true);
+        setLoading(false);
       }
     } catch (error: any) {
       toast.error(error?.data?.message);
+      setLoading(false);
     }
   }
 
@@ -83,7 +81,9 @@ export default function ConfirmPassword() {
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button onClick={handleCreatePwdClick}>Create</Button>
+          <Button disabled={loading} onClick={handleCreatePwdClick}>
+            {loading ? "Creating..." : "Create"}
+          </Button>
         </CardFooter>
       </Card>
     </div>
