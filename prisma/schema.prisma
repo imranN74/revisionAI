@@ -23,3 +23,11 @@ model User {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())
 }
+
+model Mail {
+  id         String   @id @default(uuid())
+  mailerName String
+  fromEmail  String
+  message    String
+  createdAt  DateTime @default(now())
+}

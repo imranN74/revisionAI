@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { updatePassword } from "@/actions/user";
 
 export default function ConfirmPassword() {
@@ -21,6 +21,8 @@ export default function ConfirmPassword() {
   const [passwordMatched, setPasswordMatch] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const { userId } = useParams() as { userId: string };
+
+  const router = useRouter();
 
   async function handleCreatePwdClick() {
     try {
@@ -37,6 +39,7 @@ export default function ConfirmPassword() {
         toast.success(data?.message);
         setPasswordMatch(true);
         setLoading(false);
+        router.push("/login");
       }
     } catch (error: any) {
       toast.error(error?.data?.message);

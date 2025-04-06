@@ -39,7 +39,12 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  placeholder="Password"
+                />
               </div>
               <Button type="submit" className="w-full cursor-pointer">
                 Login
