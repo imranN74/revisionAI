@@ -1,5 +1,5 @@
 import MessageInput from "../../components/message-input";
-import { Options } from "./options";
+import { Options } from "./quest-options";
 
 export default function Revise() {
   return (

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Select,
   SelectContent,
@@ -20,8 +22,8 @@ export default function SelectField({
   fields,
 }: SelectProps) {
   return (
-    <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-[180px]">
+    <Select value={value ? value : ""} onValueChange={onChange}>
+      <SelectTrigger className="w-[180px] border-black">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
