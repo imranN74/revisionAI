@@ -23,13 +23,13 @@ export default function SelectField({
 }: SelectProps) {
   return (
     <Select value={value ? value : ""} onValueChange={onChange}>
-      <SelectTrigger className="w-[180px] border-black">
+      <SelectTrigger className="w-[180px] border-white text-white">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="">
         {fields.map((field: string, index) => {
           return (
-            <SelectItem value={field} key={index}>
+            <SelectItem value={field} key={index} className="">
               {field}
             </SelectItem>
           );

@@ -8,7 +8,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 interface UserInput {
-  questCount: number;
+  questCount: string;
   text: string;
   level: string;
 }
@@ -25,6 +25,6 @@ export async function getGeminiResponseForQuestion(userInput: UserInput) {
   });
   const result = response.text;
   const finResponse = result?.replace(/```json|```/g, "").trim();
-  console.log(`++++++${finResponse}++++++`);
+  // console.log(`++++++${finResponse}++++++`);
   return finResponse;
 }
