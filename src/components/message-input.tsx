@@ -1,24 +1,29 @@
 "use client";
 
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { Paperclip } from "lucide-react";
 import { questFormStore } from "@/lib/store/useStore";
 import { ChangeEvent, useState } from "react";
 import { getGeminiResponseForQuestion } from "@/actions/gemini-api/rivise";
 import { toast } from "react-hot-toast";
+import { questionsData } from "@/lib/store/useStore";
+import { useRouter } from "next/navigation";
 
 export default function MessageInput() {
+  const router = useRouter();
+
   const [prompt, setPrompt] = useState<string>("");
+  //global state for questions prefernce
+  const questChoice = questFormStore((state) => state.questForm);
+  //global questions state
+  const questions = questionsData((state) => state.questions);
+  const setQuestions = questionsData((state) => state.setQuestions);
 
   //prompt input change
   function handleInputChange(e: ChangeEvent<HTMLTextAreaElement>) {
     setPrompt(e.target.value);
   }
-
-  //global state for questions prefernce
-  const questChoice = questFormStore((state) => state.questForm);
 
   //send message function
   async function sendMessage() {
@@ -36,7 +41,10 @@ export default function MessageInput() {
       text: prompt,
       level: questChoice.level,
     });
-    console.log(response);
+    response ? setQuestions(JSON.parse(response)) : "";
+    console.log(questionsData.getState().questions);
+    // // console.log(questions);
+    router.push("/questions");
   }
 
   return (
