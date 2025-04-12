@@ -9,11 +9,13 @@ import { getGeminiResponseForQuestion } from "@/actions/gemini-api/rivise";
 import { toast } from "react-hot-toast";
 import { questionsData } from "@/lib/store/useStore";
 import { useRouter } from "next/navigation";
+import { Loader } from "./loader";
 
 export default function MessageInput() {
   const router = useRouter();
 
   const [prompt, setPrompt] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   //global state for questions prefernce
   const questChoice = questFormStore((state) => state.questForm);
   //global questions state
@@ -27,29 +29,42 @@ export default function MessageInput() {
 
   //send message function
   async function sendMessage() {
-    if (!prompt) {
-      toast.error("Please enter your topic");
-    }
-    if (questChoice.ques === "") {
-      questChoice.ques = "10";
-      if (questChoice.level === "") {
-        questChoice.level = "Easy";
+    try {
+      setLoading(true);
+      if (!prompt) {
+        toast.error("Please enter your topic");
       }
+      if (questChoice.ques === "") {
+        questChoice.ques = "10";
+        if (questChoice.level === "") {
+          questChoice.level = "Easy";
+        }
+      }
+      const response = await getGeminiResponseForQuestion({
+        questCount: questChoice.ques,
+        text: prompt,
+        level: questChoice.level,
+      });
+      const gptResponse = JSON.parse(response ?? "");
+      if (!gptResponse) {
+        toast.error("Invalid Input! enter valid input");
+        setLoading(false);
+        return;
+      }
+      setQuestions(gptResponse);
+      // console.log(questionsData.getState().questions);
+      router.push("/questions");
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
-    const response = await getGeminiResponseForQuestion({
-      questCount: questChoice.ques,
-      text: prompt,
-      level: questChoice.level,
-    });
-    response ? setQuestions(JSON.parse(response)) : "";
-    console.log(questionsData.getState().questions);
-    // // console.log(questions);
-    router.push("/questions");
   }
 
   return (
     <div className="w-full px-4 py-2 bg-[#33204f]">
-      <div className=" rounded-2xl  border border-gray-300 bg-gray-200 px-4 py-2 shadow-2xl">
+      {loading ? <Loader /> : ""}
+      <div className=" rounded-2xl  border border-gray-300 bg-white px-4 py-2 shadow-2xl">
         <Textarea
           placeholder="Type your topic..."
           className="min-h-[50px] max-h-60 flex-1 resize-none border-none bg-transparent p-0 text-lg  shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"

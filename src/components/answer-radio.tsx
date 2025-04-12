@@ -8,7 +8,7 @@ export default function AnswerRadio({ options }: { options: Option }) {
     <RadioGroup defaultValue="option-one">
       {Object.entries(options).map(([Key, value]) => {
         return (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2" key={Key}>
             <span>{Key}</span>
             <RadioGroupItem value={value} id={Key} />
             <Label htmlFor="option-one">{value}</Label>
