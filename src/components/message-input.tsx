@@ -62,7 +62,7 @@ export default function MessageInput() {
   }
 
   return (
-    <div className="w-full px-4 py-2 bg-[#33204f]">
+    <div className="w-full px-2 py-2 bg-[#33204f]">
       {loading ? <Loader /> : ""}
       <div className=" rounded-2xl  border border-gray-300 bg-white px-4 py-2 shadow-2xl">
         <Textarea
