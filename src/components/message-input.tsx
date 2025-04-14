@@ -45,7 +45,7 @@ export default function MessageInput() {
         text: prompt,
         level: questChoice.level,
       });
-      const gptResponse = JSON.parse(response ?? "");
+      const gptResponse = JSON.parse(response.data ?? "");
       if (!gptResponse) {
         setPrompt("");
         setLoading(false);
@@ -53,7 +53,6 @@ export default function MessageInput() {
         return;
       }
       setQuestions(gptResponse);
-      // console.log(questionsData.getState().questions);
       router.push("/questions");
       setLoading(false);
     } catch (error) {
@@ -65,9 +64,10 @@ export default function MessageInput() {
   return (
     <div className="w-full px-2 py-2 bg-[#33204f]">
       {loading ? <Loader /> : ""}
-      <div className=" rounded-2xl  border border-gray-300 bg-white px-4 py-2 shadow-2xl">
+      <div className=" rounded-2xl border border-gray-300 bg-white px-4 py-2 shadow-2xl">
         <Textarea
-          placeholder="Type your topic..."
+          value={prompt}
+          placeholder="Newton's first law..."
           className="min-h-[50px] max-h-60 flex-1 resize-none border-none bg-transparent p-0 text-lg  shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
           onChange={handleInputChange}
         />

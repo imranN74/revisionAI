@@ -72,7 +72,20 @@ export const answerData = create<AnswerData>((set, get) => ({
 
 //_________ANSWER VERIFCATION STORE_____________
 
-export const marksData = create((set) => ({
-  marks: {},
+interface Marks {
+  totalQuestion: number;
+  correctAnswer: number;
+}
+
+interface MarksData {
+  marks: Marks;
+  setMarks: (data: Marks) => void;
+}
+
+export const marksData = create<MarksData>((set) => ({
+  marks: {
+    totalQuestion: 0,
+    correctAnswer: 0,
+  },
   setMarks: (data: any) => set({ marks: data }),
 }));

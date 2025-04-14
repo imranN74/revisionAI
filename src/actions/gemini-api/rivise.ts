@@ -19,14 +19,18 @@ export async function getGeminiResponseForQuestion(userInput: UserInput) {
     .replace("{number_of_questions}", questCount.toString())
     .replace("{difficulty_level}", level)
     .replace("{user_input_text}", text);
-  const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents: prompt,
-  });
-  const result = response.text;
-  const finResponse = result?.replace(/```json|```/g, "").trim();
-  // console.log(`++++++${finResponse}++++++`);
-  return finResponse;
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: prompt,
+    });
+    const result = response.text;
+    const finResponse = result?.replace(/```json|```/g, "").trim();
+    return { status: true, message: "data fetched", data: finResponse };
+  } catch (error) {
+    console.log(error);
+    return { status: false, message: "something went wrong" };
+  }
 }
 
 //___________VERIFY ANSWERS___________
@@ -48,10 +52,16 @@ interface Answer {
 }
 
 export async function verifyAnswer(questions: Question[], answers: Answer[]) {
-  return questions.map((question, index) => {
-    const matchinganswer = answers.find(
-      (ans) => ans.question_no === `Q-${index + 1}`
-    );
-    return matchinganswer?.answer_key === question.answer;
-  });
+  try {
+    const checkedAnswer = questions.map((question, index) => {
+      const matchinganswer = answers.find(
+        (ans) => ans.question_no === `Q-${index + 1}`
+      );
+      return matchinganswer?.answer_key === question.answer;
+    });
+    return { status: true, message: "answers verified", data: checkedAnswer };
+  } catch (error) {
+    console.log(error);
+    return { status: false, message: "something went wrong" };
+  }
 }
