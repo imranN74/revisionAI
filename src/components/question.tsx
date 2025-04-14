@@ -14,7 +14,10 @@ export default function Quest() {
             <div>{data.question}</div>
           </div>
           <div className="px-2">
-            <AnswerRadio options={data.options} questionNumber={index + 1} />
+            <AnswerRadio
+              options={data.options}
+              questionKey={`Q-${index + 1}`}
+            />
           </div>
         </div>
         <hr />

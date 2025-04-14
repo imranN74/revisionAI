@@ -12,23 +12,20 @@ type Option = {
 
 export default function AnswerRadio({
   options,
-  questionNumber,
+  questionKey,
 }: {
   options: Option;
-  questionNumber: number;
+  questionKey: string;
 }) {
-  const [answer, setAnswerKey] = useState("");
   const setAnswer = answerData((state) => state.setAnswer);
-  const answerId = useRef(null);
-  const questId = `Q-${questionNumber}`;
 
   function handleAnswerUpdate(val: string) {
-    setAnswerKey(val);
-    setAnswer({ question_no: questId, answer_key: answer });
+    setAnswer({ question_no: questionKey, answer_key: val });
+    // console.log(val);
   }
 
   return (
-    <RadioGroup defaultValue="option-one" onValueChange={handleAnswerUpdate}>
+    <RadioGroup defaultValue="" onValueChange={handleAnswerUpdate}>
       {Object.entries(options).map(([Key, value]) => {
         return (
           <div className="flex items-center space-x-2" key={Key}>

@@ -21,7 +21,7 @@ export function QuestionSubmit() {
   async function handleQuestionSubmit() {
     try {
       setLoader(true);
-      if (!answers.length) {
+      if (answers.length === 0) {
         toast.error("no question attempted!");
         setLoader(false);
         return;
