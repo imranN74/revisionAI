@@ -2,7 +2,7 @@
 
 import nodemailer from "nodemailer";
 import { generateOTP } from "otp-agent";
-import { otpMail } from "./mailContent";
+import { otpMail } from "./mail-content";
 import redis from "@/lib/redis";
 
 const senderMail = process.env.MAIL_ID;

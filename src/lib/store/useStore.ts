@@ -1,5 +1,6 @@
 import { create } from "zustand";
 
+//____________QUESTION FORM STORE_________________
 interface QuestForm {
   ques: string;
   level: string;
@@ -24,6 +25,7 @@ export const questFormStore = create<QuestStore>((set) => ({
     })),
 }));
 
+//____________________QUESTIONS STORE____________
 interface Question {
   answer: string;
   options: {
@@ -43,4 +45,34 @@ interface QuestionData {
 export const questionsData = create<QuestionData>((set) => ({
   questions: [],
   setQuestions: (data: Question[]) => set({ questions: data }),
+}));
+
+//_____________ANSWER STORE______________________
+
+interface Answer {
+  question_no: string;
+  answer_key: string;
+}
+
+interface AnswerData {
+  answers: Answer[];
+  setAnswer: (data: Answer) => void;
+}
+
+export const answerData = create<AnswerData>((set, get) => ({
+  answers: [],
+  setAnswer: (data: Answer) => {
+    const currentData = get().answers;
+    const filtered = currentData.filter(
+      (item) => item.question_no !== data.question_no
+    );
+    set({ answers: [...filtered, data] });
+  },
+}));
+
+//_________ANSWER VERIFCATION STORE_____________
+
+export const marksData = create((set) => ({
+  marks: {},
+  setMarks: (data: any) => set({ marks: data }),
 }));

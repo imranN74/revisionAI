@@ -28,3 +28,30 @@ export async function getGeminiResponseForQuestion(userInput: UserInput) {
   // console.log(`++++++${finResponse}++++++`);
   return finResponse;
 }
+
+//___________VERIFY ANSWERS___________
+
+interface Question {
+  answer: string;
+  options: {
+    A: string;
+    B: string;
+    C: string;
+    D: string;
+  };
+  question: string;
+}
+
+interface Answer {
+  question_no: string;
+  answer_key: string;
+}
+
+export async function verifyAnswer(questions: Question[], answers: Answer[]) {
+  return questions.map((question, index) => {
+    const matchinganswer = answers.find(
+      (ans) => ans.question_no === `Q-${index + 1}`
+    );
+    return matchinganswer?.answer_key === question.answer;
+  });
+}

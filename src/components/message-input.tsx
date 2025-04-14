@@ -47,8 +47,9 @@ export default function MessageInput() {
       });
       const gptResponse = JSON.parse(response ?? "");
       if (!gptResponse) {
-        toast.error("Invalid Input! enter valid input");
+        setPrompt("");
         setLoading(false);
+        toast.error("Invalid Input! enter valid content");
         return;
       }
       setQuestions(gptResponse);
